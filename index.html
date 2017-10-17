@@ -11,7 +11,7 @@
 </head>
     </head>
 
-   <body >
+   <body>
       <style>
         #form{
           width: 470px;
@@ -49,7 +49,7 @@
             padding: 20px;
         }
         .mPriv{
-            background:red ; 
+            background:white; 
             height: 200px; 
             width:200px; 
             color:black; 
@@ -75,6 +75,16 @@
         }
         #mainPage,#globalMess{
             background-image: url("content/images/fondo.jpg");
+        }
+        .privMess{
+          background:white ;
+          height: 200px; 
+          width:200px; 
+          color: black; 
+          box-shadow:1px 1px 1px 1px gray; 
+          overflow:auto;
+          float: left;
+
         }
       </style>
 
@@ -106,6 +116,8 @@
           </div>
 
           <div style="background-color: orange">
+
+         
             <form id="msgForm" class="form-my">
               <div class="wrapper" >
                 <div class="row" >
@@ -115,20 +127,17 @@
                     <input type="text" title="Users Conected: "><br><hr>
                     
                   </div>
-                  <div style="float: left; background-color: white;" class="privmsg mPriv col-sm-3">
-                    
-                      <em>Chat-Private: </em><br><hr>
-                    
-                  </div>
 
-                  <div style="float: left;" class="col-sm-6"> 
+                   <div style="width: 150px; float: left;" class=" privMessContainer col-sm-3"></div>
+
+                  <div style="float: right;" class="col-sm-5"> 
                    Message: <input id="messageInput" type="text" class="msg_box" placeholder="message...." >
                    <input  style="width: 150px; float: left;" type="submit" value="Send to public">
                    <input style="float: left; width: 100px; height: 49px; margin-top: 9px; margin-left: 10px; "  id="emoji" type="button" value="emoji" title="Emoji" />
                   </div>
                 </div>
-           <!-- <div class="privmsg mPriv"></div>
-                <div class="msg_ma_error"></div> -->
+           <!-- <div class="privmsg mPriv"></div> -->
+                <div class="msg_ma_error"></div>
             
               </div>
               <div id="emojiWrapper"></div>       
@@ -226,8 +235,14 @@ HiChat.prototype = {
 
   </script>
    <script type="text/javascript">
-  var socket = io.connect('192.168.1.77:3000');
+  var socket = io.connect('localhost:3000');
   var userM= '';
+  var TexUserField = [];
+
+
+  $(document).on('click','.removeButton',function(){
+      $(this).closest('.parentDiv').remove();
+  });
 
   $('.btn').click(function() {
     var txt = $('.box').val();
@@ -254,8 +269,26 @@ HiChat.prototype = {
       $('.allmsg').append(data + '<br>');
   });
 
-  socket.on('call',function(data) {
-      $('.privmsg').append(data + '<br>');
+  socket.on('call',function(data,userId) {
+      console.log("Nombre del usuario: "+userId);
+
+      if( $('#T'+userId).length == 0 ){
+
+          TexUserField[TexUserField.length] ='<div class="parentDiv"> <div id="T'+userId+'" class="privmsg privMess" data-arrnumber="'+TexUserField.length+'"><div style="color : white; width: 180px; height: 20px; background-color: gray; text-align: center;">'+userId+'<button class="removeButton pull-right" style="width:25px; color:black;">X </button></div></div><br></div>';
+
+          if (TexUserField.length > 1) {
+              $('.privMessContainer')
+              .append(TexUserField[TexUserField.length - 1]);
+          }else{
+                    $('.privMessContainer')
+                    .html(TexUserField[0]);  
+          }
+
+          $('#T'+userId).append(data + '<br>');
+
+      }else{
+        $('#T'+userId).append(data + '<br>');
+      }
   });
 
 
@@ -305,9 +338,23 @@ HiChat.prototype = {
       }
   })
 
+
+
   function msgUser(usero){
     userM=usero;
     document.getElementById("msgForm").submit;
+  }
+
+  function deleteWindowTextuser(deleteTA,arrNum){
+
+            var htmlTextUser = '';
+
+            TexUserField[deleteTA-1] = '';
+            $('.privMessContainer').html('');
+            for (var i = 0; i <= TexUserField.length - 1; i++) {
+              htmlTextUser = htmlTextUser + TexUserField[i];
+            }
+            $('#T'+arrNum).remove();
   }
 
 

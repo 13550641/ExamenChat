@@ -54,7 +54,7 @@ io.on('connection',function(socket) {
 		  	//online.push(socket.username);
 		  	console.log(data + '  is connected');
             updtng_nw_usr();
-            io.sockets.emit('snd_mg','<font class="panel" size="2.5" face="Permanent Marker" color="blue">'+ socket.username +' is Conected.....</font><hr>');
+            io.sockets.emit('snd_mg','<font class="panel" size="2.5" face="Permanent Marker" color="gray">'+ socket.username +' is Conected.....</font><hr>');
 		  }
 	    
 	});
@@ -65,7 +65,7 @@ io.on('connection',function(socket) {
 			//online.splice(online.indexOf(socket.username),1);
 			updtng_nw_usr();
 			console.log(socket.username + '  is disconnected');
-			io.sockets.emit('snd_mg','<font size="2.5" class="panel" face="Permanent Marker" color="red">'+ socket.username +' is Disconected.....</font><hr>');
+			io.sockets.emit('snd_mg','<font size="2.5" class="panel" face="Permanent Marker" color="gray">'+ socket.username +' is Disconected.....</font><hr>');
 		}
 	});
 
@@ -73,7 +73,7 @@ io.on('connection',function(socket) {
 	  
 	  var html = " ";
 	  for (var i = 0; i < Object.keys(online).length; i++) {
-	    html = '<button style="height: 30px; width:200px; " id="'+Object.keys(online)[i] +'" value="'+Object.keys(online)[i] +'" class="glyphicon glyphicon-send User buttonUser" onclick="msgUser(\''+Object.keys(online)[i] +'\')">'+Object.keys(online)[i] +'</button> <br>' + html;
+	    html = '<button style="height: 30px; width:200px; " id="'+Object.keys(online)[i] +'" value="'+Object.keys(online)[i] +'" class="glyphicon glyphicon-send User buttonUser" onclick="msgUser(\''+Object.keys(online)[i] +'\')"> '+Object.keys(online)[i] +'</button> <br>' + html;
 
 	  }
 	  io.sockets.emit('all_users','Users Conected: <br><hr>'+ html);
@@ -101,14 +101,19 @@ io.on('connection',function(socket) {
           	 console.log("KEYS: ");
           	 console.log(keys);
 
+          	 /*that.socket.emit('postMsg', msg, color);
+          	 that._displayNewMsg('me', msg, color);
+          	 return;
+          	 
+*/
 
 
 
 //             if (to in online) { 
 			  if (keys.indexOf(to)!=-1){
 			  	console.log("ok");
-                online[to].emit('call','<b>'+ socket.username +' :</b>'+'<span style="color:black;">'+pure_msg+'</span>');
-                online[socket.username].emit('call','<b>'+ socket.username  +' :</b>'+'<span style="color:black;">'+pure_msg+'</span>');
+                online[to].emit('call','<b>'+ socket.username +' :</b>'+'<span style="color:black;">'+pure_msg+'</span>',socket.username);
+                online[socket.username].emit('call','<b>'+ socket.username  +' :</b>'+'<span style="color:black;">'+pure_msg+'</span>',to);
               
 			let mensaje = new Mensaje();         
 			mensaje.nick  = socket.username;
@@ -129,7 +134,7 @@ io.on('connection',function(socket) {
                 callback('User is Not In Online...');
               }
           }else{//public msg when to box is empty
-            io.sockets.emit('snd_mg','<b>'+ socket.username +' :</b>'+'<span style="color:red;">'+pure_msg+'</span>');
+            io.sockets.emit('snd_mg','<b>'+ socket.username +' : </b>'+'<span style="color:blue;">'+pure_msg+'</span>');
 
 			let mensaje = new Mensaje();         
 			mensaje.nick  = socket.username;
@@ -161,8 +166,10 @@ io.on('connection',function(socket) {
 	socket.on('postMsg', function(msg, color) {
         socket.broadcast.emit('newMsg', socket.nickname, msg, color);
     });
+    /*socket.on('img', function(imgData, color){
+    	socket.broadcast.emit('newImg', socket.nickname, imgData, color);
+    });*/
 
 });
 
 
-    
