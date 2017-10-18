@@ -114,7 +114,8 @@ io.on('connection',function(socket) {
 			  	console.log("ok");
                 online[to].emit('call','<b>'+ socket.username +' :</b>'+'<span style="color:black;">'+pure_msg+'</span>',socket.username);
                 online[socket.username].emit('call','<b>'+ socket.username  +' :</b>'+'<span style="color:black;">'+pure_msg+'</span>',to);
-              
+                                online[socket.username].emit('call','<b>'+ socket.username  +' :</b>'+'<span style="color:black;">'+"zumb"+'</span>',to);
+
 			let mensaje = new Mensaje();         
 			mensaje.nick  = socket.username;
 			mensaje.mensaje = pure_msg;
@@ -135,6 +136,7 @@ io.on('connection',function(socket) {
               }
           }else{//public msg when to box is empty
             io.sockets.emit('snd_mg','<b>'+ socket.username +' : </b>'+'<span style="color:blue;">'+pure_msg+'</span>');
+            //hhhhh
 
 			let mensaje = new Mensaje();         
 			mensaje.nick  = socket.username;
@@ -151,6 +153,8 @@ io.on('connection',function(socket) {
 			});
 
           }
+
+          
         }
 	});
 
